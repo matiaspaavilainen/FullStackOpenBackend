@@ -40,7 +40,7 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/info', (request, response) => {
     Person.find({}).then(persons => {
-        length = persons.length
+        var length = persons.length
         response.send(`
         <p>Phonebook has info for ${length} people</p>
         <p>${new Date(Date.now()).toString()}</p>
@@ -62,7 +62,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
