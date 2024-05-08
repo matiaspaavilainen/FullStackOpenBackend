@@ -13,9 +13,30 @@ mongoose.connect(url)
         console.log("error: ", error.message)
     })
 
+function validator (val) {
+    const number = val.split('-')
+    if (number.length == 2) {
+        if ((number[0].length == 2 || number[0].length == 3)) {
+            return true
+        }
+    }
+    return false
+}
+
+const numberValidator = [validator, 'Number format is incorrect']
+
 const personSchema = new mongoose.Schema({
-    name: String, 
-    number: String,
+    name: {
+        type: String,
+        minlength: 3,
+        required: true,
+    }, 
+    number: {
+        type: String,
+        minlength: 8,
+        validate: numberValidator,
+        required: true,
+    },
 })
 
 personSchema.set('toJSON', {
