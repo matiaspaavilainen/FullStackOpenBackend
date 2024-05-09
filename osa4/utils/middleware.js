@@ -7,7 +7,6 @@ morgan.token('body', function (request) {
 
 const requestLogger = morgan(':method :url :status :res[content-length] - :response-time ms :body')
 
-
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
