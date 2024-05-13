@@ -2,8 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "How to eat bread",
-    "author": "Pan",
-    "url": "bread.com",
+    "title": "How to buy ludens",
+    "url": "redit.com",
     "likes": 7
 }
