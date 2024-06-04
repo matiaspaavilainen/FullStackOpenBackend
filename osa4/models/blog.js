@@ -5,11 +5,7 @@ const blogSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+    author: String,
     url: {
         type: String,
         required: true
@@ -17,6 +13,10 @@ const blogSchema = mongoose.Schema({
     likes: {
         type: Number,
         default: 0
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
 })
 

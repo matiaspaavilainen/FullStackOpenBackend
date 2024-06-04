@@ -5,7 +5,7 @@ const userExtractor = require('../utils/middleware').userExtractor
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
         .find({})
-        .populate('author', { username: 1, name: 1 })
+        .populate('user', { username: 1, name: 1 })
     response.json(blogs)
 })
 
@@ -17,13 +17,9 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
         return response.status(401).json({ error: 'invalid token' })
     }
 
-    const blog = new Blog({
-        title: body.title,
-        author: user._id,
-        url: body.url,
-        likes: body.likes,
-    })
+    const blog = new Blog(body)
 
+    blog.user = user
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
@@ -47,14 +43,19 @@ blogsRouter.put('/:id', async (request, response) => {
 blogsRouter.delete('/:id', userExtractor, async (request, response) => {
     const user = request.user
     const blog = await Blog.findById(request.params.id)
+    console.log(blog)
 
     if (!blog) {
-        return response.status(404).json({ error: 'Blog not found' })
+        return response.status(204).end()
     }
 
-    if (blog.author.toString() !== user.id.toString()) {
+    console.log(blog.user)
+
+    if (blog.user.toString() !== user.id.toString()) {
         return response.status(401).json({ error: 'unauthorized' })
     }
+
+    user.blogs = user.blogs.filter(b => b._id.toString() !== blog._id.toString())
 
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
